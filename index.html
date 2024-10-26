@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Swap</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* This will push main content towards the bottom */
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #2c2f33;
+    color: #ffffff;
+    padding-top: 20px;
+
+}
+
+.logo {
+    position: fixed;
+    top: 50px;
+    z-index: -1;
+    width: 500px;
+    height: auto;
+}
+
+/* Center the container near the bottom */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 50px; /* Space above footer or bottom */
+}
+
+
+        /* Floating Bubbles Canvas Styling */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -2;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Container Styling */
+        .container {
+            width: 90%;
+            max-width: 350px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #4a4f54;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+margin-top: 300px; /* Adjust this value to control how far down it shifts */
+        }
+
+        /* Status Styling */
+        .status-container {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .status-online {
+            color: #2ecc71;
+        }
+
+        .status-offline {
+            color: #e74c3c;
+        }
+
+        /* Title Styling */
+        h2 {
+            margin-bottom: 15px;
+            color: #ffffff;
+            font-size: 1.5rem;
+        }
+
+        /* Input Styling */
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: #333;
+            color: #ffffff;
+        }
+
+        /* Button Styling */
+        .button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            color: #ffffff;
+        }
+
+        .get-details {
+            background-color: #3498db;
+        }
+
+        .get-details:hover {
+            background-color: #2980b9;
+        }
+
+        .confirm-transfer {
+            background-color: #9b59b6;
+        }
+
+        .confirm-transfer:hover {
+            background-color: #8e44ad;
+        }
+
+        /* Disabled Button Styling */
+        .button:disabled {
+            background-color: #7f8c8d;
+            cursor: not-allowed;
+        }
+
+        /* Display Boxes Styling */
+        .output, .details {
+            width: 650px;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #444b52;
+            border: 1px solid #555;
+            font-size: 0.95rem;
+            color: #d3d6da;
+            text-align: left;
+            line-height: 1.5;
+        }
+a {
+    color: #ffffff; /* White color */
+    text-decoration: none; /* Removes underline */
+}
+
+a:hover {
+    color: #cccccc; /* Light grey on hover for contrast */
+    text-decoration: underline; /* Optional underline on hover */
+}
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Logo -->
+    <img src="https://www.xtdevelopment.net/music/logo.png" alt="Logo" class="logo">
+
+    <!-- Floating Bubbles Canvas -->
+    <canvas id="canvas"></canvas>
+
+    <!-- Status Indicator -->
+    <div id="swapStatus" class="status-container">Checking swap status...</div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h2>MEQ to NCZ Swap</h2>
+        <input type="text" id="nczAddress" class="input-box" placeholder="Enter NCZ address">
+        <input type="number" id="meqAmount" class="input-box" placeholder="Enter MEQ amount" step="0.000001" min="0">
+        <button id="getDetailsBtn" class="button get-details" onclick="getTransferDetails()">Get Transfer Details</button>
+        <button id="confirmTransferBtn" class="button confirm-transfer" onclick="confirmTransfer()">Confirm Transfer</button>
+    </div>
+    
+    <div id="details" class="details"></div>
+    <div id="output" class="output"></div>
+
+    <script>
+        const detailsDiv = document.getElementById('details');
+        const outputDiv = document.getElementById('output');
+        const meqAmountInput = document.getElementById('meqAmount');
+        const nczAddressInput = document.getElementById('nczAddress');
+        const getDetailsBtn = document.getElementById('getDetailsBtn');
+        const confirmTransferBtn = document.getElementById('confirmTransferBtn');
+
+        // Swap Status Check
+        async function checkSwapStatus() {
+            const statusDiv = document.getElementById('swapStatus');
+            try {
+                const response = await fetch('https://rpc.nanocheeze.com:8211/chain_info');
+                if (!response.ok) throw new Error("Failed to fetch chain info");
+
+                const data = await response.json();
+                statusDiv.textContent = "The NanoCheeZe MEQUAVIS Swap is ONLINE";
+                statusDiv.classList.add("status-online");
+            } catch (error) {
+                statusDiv.textContent = "The NanoCheeZe MEQUAVIS Swap is OFFLINE";
+                statusDiv.classList.add("status-offline");
+            }
+        }
+
+        checkSwapStatus();
+
+        function getTransferDetails() {
+            const meqAmount = meqAmountInput.value;
+            const nczAddress = nczAddressInput.value;
+            
+            if (!meqAmount || !nczAddress) {
+                outputDiv.textContent = "Please enter both MEQ amount and NCZ address.";
+                return;
+            }
+
+            fetch('https://rpc.nanocheeze.com:8211/swap-request', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ meq_amount: parseFloat(meqAmount), ncz_address: nczAddress })
+            })
+            .then(response => response.json())
+            .then(data => {
+                meqAmountInput.value = data.meq_amount;
+                meqAmountInput.disabled = true;
+                nczAddressInput.disabled = true;
+
+                detailsDiv.innerHTML = `<strong>Instructions:</strong><br>
+                                       Send exactly <strong>${data.meq_amount} MEQ</strong> to the following address:<br>
+                                       <strong>${data.send_to}</strong><br><br>
+                                       <strong>NCZ Address:</strong> ${nczAddress}<br>
+                                       <strong>Expected NCZ Amount:</strong> ${meqAmount}<br><br>
+                                       After sending the exact amount, click the <strong>Confirm Transfer</strong> button.<br>
+                                       Then, please wait a few minutes for your NCZ tokens to arrive.`;
+
+                getDetailsBtn.disabled = true;
+            })
+            .catch(error => {
+                outputDiv.textContent = "Error: Unable to get transfer details.";
+                console.error('Error:', error);
+            });
+        }
+
+        function confirmTransfer() {
+            const meqAmount = meqAmountInput.value;
+            const nczAddress = nczAddressInput.value;
+
+            if (!meqAmount || !nczAddress) {
+                outputDiv.textContent = "Please enter the MEQ amount and NCZ address used for the transfer.";
+                return;
+            }
+
+            confirmTransferBtn.disabled = true;
+            setTimeout(() => {
+                confirmTransferBtn.disabled = false;
+            }, 30000);
+
+            fetch('https://rpc.nanocheeze.com:8211/check-swap', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ meq_amount: parseFloat(meqAmount), ncz_address: nczAddress })
+            })
+            .then(response => response.json())
+            .then(data => {
+    outputDiv.innerHTML = `<strong>Status:</strong> ${data.message}<br><strong>NCZ txID:</strong><a href="http://rpc.nanocheeze.com/tx/${data.txid}" target="_blank">${data.txid}</a>`;
+})
+            .catch(error => {
+                outputDiv.textContent = "Error: Unable to confirm transfer.";
+                console.error('Error:', error);
+            });
+        }
+
+        // Floating Bubbles Effect
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const imageSources = ['https://info.nanocheeze.com/images/ncz.png'];
+        let images = [];
+
+        function createImages() {
+            const numOfImages = Math.floor(Math.random() * 100) + 20;
+
+            for (let i = 0; i < numOfImages; i++) {
+                const imgSrc = imageSources[Math.floor(Math.random() * imageSources.length)];
+                const img = {
+                    image: new Image(),
+                    x: (Math.random() < 0.5 ? -100 : canvas.width + 100),
+                    y: (Math.random() < 0.5 ? -100 : canvas.height + 100),
+                    speedX: (Math.random() - 0.5) * 3,
+                    speedY: (Math.random() - 0.5) * 3,
+                    scale: Math.random() * 0.9 + 0.1
+                };
+                img.image.src = imgSrc;
+                images.push(img);
+            }
+        }
+
+        function updateAndDraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            images.forEach(img => {
+                img.x += img.speedX;
+                img.y += img.speedY;
+
+                if (img.x < -200 || img.x > canvas.width + 200 || img.y < -200 || img.y > canvas.height + 200) {
+                    img.x = (Math.random() < 0.5 ? -100 : canvas.width + 100);
+                    img.y = (Math.random() < 0.5 ? -100 : canvas.height + 100);
+                    img.speedX = (Math.random() - 0.5) * 5;
+                    img.speedY = (Math.random() - 0.5) * 5;
+                }
+
+                ctx.drawImage(img.image, img.x, img.y, img.image.width * img.scale, img.image.height * img.scale);
+            });
+
+            requestAnimationFrame(updateAndDraw);
+        }
+
+        createImages();
+        updateAndDraw();
+    </script>
+
+</body>
+</html>
