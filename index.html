@@ -371,6 +371,15 @@ function isValidNczAddress(address) {
 
 
     </script>
+<script>
+    // Check if the page is loaded in an iframe
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.self !== window.top) {
+            // Page is loaded in an iframe
+            document.body.style.backgroundColor = 'transparent'; // Make background transparent
+        }
+    });
+</script>
 
 </body>
 </html>
