@@ -430,7 +430,8 @@ function isValidNczAddress(address) {
                 // Reverse flex order of elements
                 const body = document.body;
                 body.style.display = 'flex';
-                body.style.flexDirection = 'column-reverse'; // Reverse the order
+                body.style.flexDirection = 'column'; // Reverse the order
+                body.style.justifyContent = 'flex-start'; // Correct camelCase for justify-content
             }
         } catch (error) {
             console.error('Error detecting iframe status or applying styles:', error);
