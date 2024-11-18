@@ -373,14 +373,26 @@ function isValidNczAddress(address) {
     </script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Check if the current page URL is not the expected one
-        if (!window.location.href.includes('swap.nanocheeze.com')) {
+        // Log the current URL for debugging
+        console.log('Current URL:', window.location.href);
+
+        // Check if the current page URL contains 'swap.nanocheeze.com'
+        const isSwapDomain = window.location.href.includes('swap.nanocheeze.com');
+        console.log('Is swap.nanocheeze.com in the URL?', isSwapDomain);
+
+        if (!isSwapDomain) {
             // Set the body background color to transparent
             document.body.style.backgroundColor = 'transparent';
-          
+
+            // Hide the logo element
+            const logoElement = document.querySelector('.logo');
+            if (logoElement) {
+                logoElement.style.display = 'none';
+            }
         }
     });
 </script>
+
 
 
 </body>
