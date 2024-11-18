@@ -426,6 +426,11 @@ function isValidNczAddress(address) {
                     detailsDiv.style.fontSize = '1.8rem'; // Larger font size
                     detailsDiv.style.padding = '30px'; // Add padding
                 }
+
+                // Reverse flex order of elements
+                const body = document.body;
+                body.style.display = 'flex';
+                body.style.flexDirection = 'column-reverse'; // Reverse the order
             }
         } catch (error) {
             console.error('Error detecting iframe status or applying styles:', error);
