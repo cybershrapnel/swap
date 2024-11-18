@@ -432,6 +432,15 @@ function isValidNczAddress(address) {
                 body.style.display = 'flex';
                 body.style.flexDirection = 'column'; // Reverse the order
                 body.style.justifyContent = 'flex-start'; // Correct camelCase for justify-content
+
+                if (outputDiv) {
+    outputDiv.style.position = 'fixed'; // Fix to the viewport
+    outputDiv.style.bottom = '0'; // Stick to the bottom
+    outputDiv.style.width = '100%'; // Stretch to full width
+    outputDiv.style.textAlign = 'center'; // Center-align the text
+    outputDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'; // Optional: Add background color
+    outputDiv.style.padding = '20px'; // Add padding
+}
             }
         } catch (error) {
             console.error('Error detecting iframe status or applying styles:', error);
