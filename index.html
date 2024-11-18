@@ -268,12 +268,12 @@ function isValidNczAddress(address) {
                 meqAmountInput.disabled = true;
                 nczAddressInput.disabled = true;
 
-                detailsDiv.innerHTML = `<strong>Instructions:</strong><br>
-                                       Send exactly <strong>${data.meq_amount} MEQ</strong> to the following address:<br>
+                detailsDiv.innerHTML = `
+                                       Send exactly <strong>${data.meq_amount} MEQ</strong> to:<br>
                                        <strong>${data.send_to}</strong><br><br>
                                        <strong>NCZ Address:</strong> ${nczAddress}<br>
                                        <strong>Expected NCZ Amount:</strong> ${meqAmount}<br><br>
-                                       After sending the exact amount, click the <strong>Confirm Transfer</strong> button.<br>
+                                       After sending the exact amount, click <strong>Confirm Transfer</strong>.<br>
                                        Then, please wait a few minutes for your NCZ tokens to arrive.`;
 
                 getDetailsBtn.disabled = true;
@@ -423,8 +423,8 @@ function isValidNczAddress(address) {
 
                 if (detailsDiv) {
                     detailsDiv.style.width = '95%'; // Widen details div
-                    detailsDiv.style.maxWidth = '900px'; // Match container width
-                    detailsDiv.style.fontSize = '1.8rem'; // Larger font size
+                    detailsDiv.style.maxWidth = '800px'; // Match container width
+                    detailsDiv.style.fontSize = '1.5rem'; // Larger font size
                     detailsDiv.style.padding = '30px'; // Add padding
                 }
 
