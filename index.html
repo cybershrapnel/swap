@@ -372,14 +372,15 @@ function isValidNczAddress(address) {
 
     </script>
 <script>
-    // Check if the page is loaded in an iframe
     document.addEventListener('DOMContentLoaded', () => {
-        if (window.self !== window.top) {
-            // Page is loaded in an iframe
-            document.body.style.backgroundColor = 'transparent'; // Make background transparent
+        // Check if the current page URL is not the expected one
+        if (window.location.href !== 'https://swap.nanocheeze.com') {
+            // Set the body background color to transparent
+            document.body.style.backgroundColor = 'transparent';
         }
     });
 </script>
+
 
 </body>
 </html>
