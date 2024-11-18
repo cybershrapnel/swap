@@ -388,13 +388,35 @@ function isValidNczAddress(address) {
                 if (logoElement) {
                     logoElement.style.display = 'none';
                 }
+
+                // Increase the size of the .container
+                const container = document.querySelector('.container');
+                if (container) {
+                    container.style.width = '90%'; // Increase width
+                    container.style.maxWidth = '700px'; // Allow a larger max width
+                    container.style.padding = '40px'; // Add more padding
+                    container.style.fontSize = '1.5rem'; // Make text larger
+                }
+
+                // Resize the input boxes and buttons
+                const inputs = document.querySelectorAll('.input-box');
+                inputs.forEach(input => {
+                    input.style.height = '60px'; // Double height
+                    input.style.fontSize = '1.5rem'; // Make font larger
+                });
+
+                const buttons = document.querySelectorAll('.button');
+                buttons.forEach(button => {
+                    button.style.height = '60px'; // Double height
+                    button.style.fontSize = '1.5rem'; // Make font larger
+                });
             }
         } catch (error) {
-            // Log error if access to window.top is restricted
-            console.error('Error detecting iframe status:', error);
+            console.error('Error detecting iframe status or applying styles:', error);
         }
     });
 </script>
+
 
 
 
