@@ -392,24 +392,40 @@ function isValidNczAddress(address) {
                 // Increase the size of the .container
                 const container = document.querySelector('.container');
                 if (container) {
-                    container.style.width = '90%'; // Increase width
-                    container.style.maxWidth = '700px'; // Allow a larger max width
-                    container.style.padding = '40px'; // Add more padding
-                    container.style.fontSize = '1.5rem'; // Make text larger
+                    container.style.width = '95%'; // Make it even wider
+                    container.style.maxWidth = '800px'; // Increase max width
+                    container.style.padding = '50px'; // Add more padding
+                    container.style.fontSize = '2rem'; // Make text larger
                 }
 
                 // Resize the input boxes and buttons
                 const inputs = document.querySelectorAll('.input-box');
                 inputs.forEach(input => {
-                    input.style.height = '60px'; // Double height
-                    input.style.fontSize = '1.5rem'; // Make font larger
+                    input.style.height = '70px'; // Even bigger height
+                    input.style.fontSize = '1.8rem'; // Make font larger
                 });
 
                 const buttons = document.querySelectorAll('.button');
                 buttons.forEach(button => {
-                    button.style.height = '60px'; // Double height
-                    button.style.fontSize = '1.5rem'; // Make font larger
+                    button.style.height = '70px'; // Even bigger height
+                    button.style.fontSize = '1.8rem'; // Make font larger
                 });
+
+                // Resize #output and #details divs
+                if (outputDiv) {
+                    outputDiv.style.width = '95%'; // Widen output div
+                    outputDiv.style.maxWidth = '800px'; // Match container width
+                    outputDiv.style.fontSize = '1.8rem'; // Larger font size
+                    outputDiv.style.padding = '30px'; // Add padding
+                    outputDiv.textContent = 'Click the title to hide the visualizer!';
+                }
+
+                if (detailsDiv) {
+                    detailsDiv.style.width = '95%'; // Widen details div
+                    detailsDiv.style.maxWidth = '800px'; // Match container width
+                    detailsDiv.style.fontSize = '1.8rem'; // Larger font size
+                    detailsDiv.style.padding = '30px'; // Add padding
+                }
             }
         } catch (error) {
             console.error('Error detecting iframe status or applying styles:', error);
