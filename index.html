@@ -373,25 +373,29 @@ function isValidNczAddress(address) {
     </script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Log the current URL for debugging
-        console.log('Current URL:', window.location.href);
+        try {
+            // Check if the page is in an iframe
+            const isInIframe = window.self !== window.top;
 
-        // Check if the current page URL contains 'swap.nanocheeze.com'
-        const isSwapDomain = window.location.href.includes('swap.nanocheeze.com');
-        console.log('Is swap.nanocheeze.com in the URL?', isSwapDomain);
+            console.log('Is in iframe:', isInIframe);
 
-        if (!isSwapDomain) {
-            // Set the body background color to transparent
-            document.body.style.backgroundColor = 'transparent';
+            if (isInIframe) {
+                // Set the body background color to transparent
+                document.body.style.backgroundColor = 'transparent';
 
-            // Hide the logo element
-            const logoElement = document.querySelector('.logo');
-            if (logoElement) {
-                logoElement.style.display = 'none';
+                // Hide the logo element
+                const logoElement = document.querySelector('.logo');
+                if (logoElement) {
+                    logoElement.style.display = 'none';
+                }
             }
+        } catch (error) {
+            // Log error if access to window.top is restricted
+            console.error('Error detecting iframe status:', error);
         }
     });
 </script>
+
 
 
 
