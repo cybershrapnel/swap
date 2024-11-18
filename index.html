@@ -374,7 +374,7 @@ function isValidNczAddress(address) {
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Check if the current page URL is not the expected one
-        if (window.location.href !== 'https://swap.nanocheeze.com') {
+        if (!window.location.href.includes('swap.nanocheeze.com')) {
             // Set the body background color to transparent
             document.body.style.backgroundColor = 'transparent';
         }
